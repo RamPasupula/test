@@ -20,7 +20,7 @@
 		<hadoop-version></hadoop-version>
 		<spring.version>3.1.0.RELEASE</spring.version>
 		<jetty.version>6.1.26</jetty.version>
-		<hive.version>1.1.0-cdh5.11.0</hive.version>
+		<hive.version>3.1.2000.7.0.3.0-79</hive.version>
 		<hadoop.version>2.6.0-cdh5.11.0</hadoop.version>
 		<spark.version>2.2.0.cloudera2</spark.version>
 		<scala.version>2.11</scala.version>
