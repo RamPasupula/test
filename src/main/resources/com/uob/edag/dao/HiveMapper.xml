@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.HiveMapper">
+  
+  <update id='createDatabase' parameterType='string'>
+      CREATE DATABASE IF NOT EXISTS ${_parameter}
+  </update>
+  
+  <update id='createStagingHiveTable' parameterType='string'>
+      ${_parameter}
+  </update>
+  
+  <update id='createHiveTable' parameterType='string'>
+      ${_parameter}
+  </update>
+  
+  <update id='renameHiveTable' parameterType='java.util.Map'>
+      ALTER TABLE ${fullTableName} RENAME TO ${fullNewTableName}
+  </update>
+  
+  <update id="dropHiveTable" parameterType="string">
+      DROP TABLE IF EXISTS ${_parameter}
+  </update>
+  
+  <update id='dropHivePartition' parameterType='java.util.Map'>
+      ALTER TABLE ${tableName} DROP IF EXISTS PARTITION (${partition})
+  </update>
+  
+  <update id='dropHivePartitionNoCheck' parameterType='java.util.Map'>
+      ALTER TABLE ${tableName} DROP PARTITION (${partition})
+  </update>
+  
+  <select id="checkPartitionExists" parameterType="java.util.Map" resultType="com.uob.edag.model.HiveColumn">
+      DESC ${tableName} PARTITION (${partition})
+  </select>
+  
+  <select id="getTablePartitions" parameterType="string" resultType="string">
+      SHOW PARTITIONS ${_parameter}
+  </select>
+  
+  <update id='attachHivePartition' parameterType='java.util.Map'>
+    ALTER TABLE ${tableName}
+    ADD IF NOT EXISTS PARTITION (${partitionValue})
+  </update>
+  
+  <update id='setQueueName' parameterType='string'>
+      set mapred.job.queue.name=${_parameter}
+  </update>
+  
+  <select id='getOtherProcInstancesRowCount' parameterType='java.util.Map' resultType='int'>
+    SELECT
+      COUNT(1) as count
+    FROM 
+      ${tableName}
+    WHERE
+      SITE_ID = '${ctryCd}'
+      AND BIZ_DT = '${bizDate}'
+      AND PROC_INSTANCE_ID != '${procInstanceId}'
+  </select>
+  
+  <select id='getRowCount' parameterType='java.util.Map' resultType='int'>
+    SELECT
+      COUNT(1) as count
+    FROM 
+      ${tableName}
+    <if test="ctryCd != null">  
+	    WHERE
+	      SITE_ID = '${ctryCd}'
+	      AND BIZ_DT = '${bizDate}'
+	      <if  test="procInstanceId != null">
+	        AND PROC_INSTANCE_ID = '${procInstanceId}'
+	      </if>
+    </if>  
+  </select>
+  
+  <select id='getRowCountByMetadata' parameterType='com.uob.edag.dao.TableMetaData' resultType='int'>
+    select count(1) as count
+    from ${schemaName}.${name}
+    <foreach collection="partitionMap" item="item" index="index" open="where " separator=" and ">
+      ${index} = ${item}
+    </foreach>
+  </select>
+  
+  <select id='getBizDateRowCount' parameterType='java.util.Map' resultType='com.uob.edag.model.BizDateRowCount'>
+    select biz_dt as bizDate, count(proc_instance_id) rowCount
+    from ${tableName}
+    where site_id = #{countryCode}
+      and biz_dt &lt; #{maxBizDate}
+    group by biz_dt
+    having count(proc_instance_id) &gt; 0
+  </select>
+  
+  <select id='getErrorRowCount' parameterType='java.util.Map' resultType='int'>
+    SELECT
+      COUNT(1) as count
+    FROM 
+      ${tableName}
+    WHERE
+      BIZ_DT = '${bizDate}'
+  </select>
+  
+  <select id='getHashSum' parameterType='java.util.Map' resultType='string'>
+    SELECT
+      <choose>
+        <when test='useImpala == "true" and castHashColumn =="true"'>
+          SUM(CAST(`${columnName}` AS DECIMAL)) as hashSum
+        </when>
+        <otherwise>
+          SUM(`${columnName}`) as hashSum
+        </otherwise>
+      </choose>
+    FROM
+      ${tableName}
+    WHERE
+      SITE_ID = '${ctryCd}'
+      AND BIZ_DT = '${bizDate}'
+      <if  test="procInstanceId != null">
+        AND PROC_INSTANCE_ID = '${procInstanceId}'
+      </if>
+  </select>
+  
+  <select id='getCountAndSum' parameterType='java.util.Map' resultType='com.uob.edag.mybatis.CountAndSumResult'>
+    SELECT
+      COUNT(1) as count, 
+      <choose>
+        <when test='useImpala == "true" and castHashColumn == "true"'>
+          SUM(CAST(`${columnName}` AS DECIMAL)) as sum
+        </when>
+        <otherwise>
+          SUM(`${columnName}`) as sum
+        </otherwise>
+      </choose>
+    FROM
+      ${tableName}
+    WHERE
+      SITE_ID = '${ctryCd}'
+      AND BIZ_DT = '${bizDate}'
+      <if  test="procInstanceId != null">
+        AND PROC_INSTANCE_ID = '${procInstanceId}'
+      </if>
+  </select>
+  
+  <select id='checkSchemaExists' parameterType='string' resultType='string'>
+    SHOW DATABASES LIKE #{schemaName}
+  </select>
+  
+  <select id='getMaxProcInstanceId' parameterType='java.util.Map' resultType='string'>
+    SELECT MAX(PROC_INSTANCE_ID) MAX_PROC_INSTANCE_ID
+    FROM ${tableName}
+    WHERE SITE_ID = '${ctryCd}'
+      AND BIZ_DT = '${bizDate}'
+  </select>
+  
+  <select id='checkTableExists' parameterType='string' resultType='string'>
+    SHOW tables in ${schemaName}  like #{tableName}
+  </select>
+  
+  <update id='runStatistics' parameterType='java.util.Map'>
+     ANALYZE TABLE ${schemaName}.${tableName} PARTITION(${partitionClause}) COMPUTE STATISTICS
+  </update>
+  
+  <insert id = 'compactPartition' parameterType='java.util.Map'>
+     INSERT OVERWRITE TABLE ${compactionTable} PARTITION (${partition}) 
+     	SELECT ${columns} FROM ${sourceTable} WHERE ${condition} 
+  </insert>
+  
+  <update id = 'renamePartition'  parameterType='java.util.Map'>
+      ALTER TABLE ${tableName} PARTITION (${originalPartition}) RENAME TO PARTITION (${targetPartition})
+  </update>
+  
+    <select id='getAttachmentNamesWithDocType' parameterType='java.util.Map' resultType='com.uob.edag.model.UNSFileTypeModel'>
+   ${hiveSQL}
+  </select>
+
+</mapper>

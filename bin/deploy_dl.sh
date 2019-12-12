@@ -1,0 +1,12 @@
+java \
+-Xmx2048M -XX:+UseConcMarkSweepGC -XX:-UseGCOverheadLimit \
+-Dlog4j.configuration=file:///Users/cb186046/IdeaProjects/edf/conf/log4j.xml \
+-Dcom.sun.management.jmxremote \
+-Dcom.sun.management.jmxremote.port=9010 \
+-Dcom.sun.management.jmxremote.local.only=false \
+-Dcom.sun.management.jmxremote.authenticate=false \
+-Dcom.sun.management.jmxremote.ssl=false \
+-Dsun.security.krb5.debug=false \
+-Dframework-conf.properties=/Users/cb186046/IdeaProjects/edf/conf/framework-conf-cb.properties \
+-Ddatabase.properties=/Users/cb186046/IdeaProjects/edf/conf/database-cb.properties \
+-cp /Users/cb186046/IdeaProjects/edf/target/edf.jar:/Users/cb186046/IdeaProjects/edf/target/lib/* com.uob.edag.processor.DataLakeDeployment -d $1

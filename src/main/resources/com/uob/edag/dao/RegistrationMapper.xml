@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.RegistrationMapper">
+  
+  <select id='checkFileExists' parameterType='string' resultType='int'>
+    SELECT
+    COUNT(1) AS COUNT
+    FROM EDAG_PROCESS_MASTER
+    WHERE PROC_ID = #{procId} AND IS_ACT_FLG='Y'
+  </select>
+  
+  <select id='getProcessGrpId' parameterType='string' resultType='int'>
+    SELECT
+    COUNT(1) AS COUNT
+    FROM EDAG_PROCESS_GROUP
+    WHERE PROC_GRP_DESC = #{groupName}
+  </select>
+  
+  <select id='getProcId' parameterType='string' resultType='int'>
+    SELECT
+    COALESCE((SELECT PROC_ID
+    FROM EDAG_PROCESS_MASTER
+    WHERE PROC_NM = #{fileName} AND IS_ACT_FLG='Y'),0) AS PROC_ID FROM DUAL
+  </select>
+  
+  <select id='getFileId' parameterType='string' resultType='int'>
+    SELECT
+    FILE_ID
+    FROM EDAG_FILE_DETAIL
+    WHERE PROC_ID = #{procId}
+  </select>
+  
+  <select id='getControlFileId' parameterType='int' resultType='int'>
+    SELECT
+    COALESCE((SELECT
+    CTRL_FILE_ID
+    FROM EDAG_FILE_DETAIL
+    WHERE FILE_ID = #{fileId}),0) AS CTRL_FILE_ID FROM DUAL
+  </select>
+  
+  <select id='retrieveStdRules' resultType='com.uob.edag.model.RuleModel'>
+    SELECT
+      RULE_ID as ruleId, RULE_DESC as ruleDesc
+    FROM EDAG_STD_RULE
+  </select>
+  
+  <select id="selectProcId" resultType="int">
+        SELECT SEQ_PROC_ID.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="selectProcGrpId" resultType="int">
+        SELECT SEQ_PROC_GRP_ID.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="selectAlertId" resultType="int">
+        SELECT SEQ_ALERT_ID.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id='insertProcessGroup' parameterType='java.util.Map'>
+      INSERT INTO EDAG_PROCESS_GROUP
+      (PROC_GRP_ID, PROC_GRP_DESC, PROC_GRP_CRITICALITY_LVL, CRT_DT, CRT_USR_NM)
+      VALUES
+      (#{procGrpId}, #{procGrpName}, #{criticality}, DEFAULT, #{userNm})
+  </insert>
+
+  <insert id='insertProcessMaster' parameterType='com.uob.edag.model.ProcessModel'>
+    <selectKey keyProperty="procId" resultType="int" order="BEFORE">
+        SELECT SEQ_PROC_ID.NEXTVAL FROM DUAL
+      </selectKey>
+      INSERT INTO EDAG_PROCESS_MASTER
+      (PROC_ID, PROC_NM, PROC_TYPE_CD, PROC_DESC, PROC_FREQ_CD, SRC_SYS_CD, IS_ACT_FLG, CRT_DT, CRT_USR_NM)
+      VALUES
+      (#{procId}, #{procName}, #{procTypeCd}, #{procDesc}, #{procFreq}, #{srcSystemCd} , 'Y', DEFAULT, #{userNm})
+  </insert>
+<!-- Commented out to ensure nobody uses this insert mapping. ctryCdList has been replaced with a map
+  <insert id='insertProcessCountry' parameterType='com.uob.edag.model.ProcessModel'>
+      INSERT ALL
+      <foreach collection="ctryCdList" item="country" separator=" "> 
+          INTO EDAG_PROC_CTRY_DTL
+        (PROC_ID, CTRY_CD, IS_ACT_FLG, UPD_DT, UPD_USR_NM)
+        VALUES
+          (
+              #{procId}, #{country}, 'Y', DEFAULT, #{userNm}
+          )
+      </foreach>
+      SELECT * FROM dual
+  </insert>
+-->
+  <insert id='insertLoadProcess' parameterType='com.uob.edag.model.HadoopModel'>
+      INSERT INTO EDAG_LOAD_PROCESS
+      (PROC_ID, TGT_FORMAT_ID, TGT_COMPR_TYPE_ID, TGT_DB_NM, TGT_TBL_NM, TGT_TBL_PART_TXT, TGT_APLY_TYPE_ID, STG_DIR_NM, STG_DB_NM, STG_TBL_NM, STG_TBL_PART_TXT, CRT_DT, CRT_USR_NM)
+      VALUES
+      (#{processId}, #{hadoopFormatID}, #{hadoopCompressID}, #{hiveDBName}, #{hiveTableName}, #{hivePartition}, #{loadTypeID}, #{stagingDir}, #{stagingDBName}, 
+      #{stagingTableName}, #{stagingHivePartition}, DEFAULT , #{userNm})
+  </insert>
+  
+  <select id="selectFileId" resultType="int">
+      SELECT SEQ_FILE_ID.NEXTVAL FROM DUAL
+    </select>
+  
+  <insert id='insertFileDetails' parameterType='com.uob.edag.model.FileModel' keyColumn="FILE_ID">
+    <selectKey keyProperty="fileId" resultType="int" order="BEFORE">
+        SELECT SEQ_FILE_ID.NEXTVAL FROM DUAL
+      </selectKey>
+      INSERT INTO EDAG_FILE_DETAIL
+      (FILE_ID, PROC_ID, DIR_NM, FILE_NM, FILE_EXTN_NM, CTRL_FILE_ID, CTRL_INFO_CD, FILE_TYPE_CD, FILE_LAYOUT_CD, FILE_COL_DELIM_TXT, FILE_TXT_DELIM_TXT, HDR_LINE_NUM, FTR_LINE_NUM, ACHV_DIR_NM, CRT_DT, CRT_USR_NM)
+      VALUES
+      (#{fileId}, #{processId}, #{sourceDirectory}, #{sourceFileName}, #{sourceFileExtn}, #{controlFileID}, #{controlInfo}, #{sourceFileTypeCd}, #{sourceFileLayoutCd}, #{columnDelimiter}, #{textDelimiter},
+      #{headerLines}, #{trailerLines}, #{sourceArchivalDir}, DEFAULT, #{userNm})
+  </insert>
+  
+  <select id="selectControlFileId" resultType="int">
+        SELECT SEQ_CTRL_FILE_ID.NEXTVAL FROM DUAL
+    </select>
+  
+  <insert id='insertControlFileDetails' parameterType='com.uob.edag.model.FileModel' keyColumn="CTRL_FILE_ID">
+      <selectKey keyProperty="controlFileID" resultType="string" order="BEFORE">
+        SELECT SEQ_CTRL_FILE_ID.NEXTVAL FROM DUAL
+      </selectKey>
+      INSERT INTO EDAG_CONTROL_FILE_DETAIL
+      (CTRL_FILE_ID, CTRL_FILE_DIR_TXT, CTRL_FILE_NM, CTRL_FILE_LAYOUT_CD, CTRL_FILE_COL_DELIM_TXT, CTRL_FILE_TXT_DELIM_TXT)
+      VALUES
+      (#{controlFileId}, #{controlFileDir}, #{controlFileName}, #{controlFileLayoutCd}, #{controlFileColumnDelimiter}, #{controlFileTextDelimiter}])
+  </insert>
+  
+  <insert id='insertFieldDetails' parameterType='java.util.List' >
+    INSERT INTO EDAG_FIELD_DETAIL
+       (FILE_ID, RCRD_TYP_CD, FLD_NM, FLD_OPTIONALITY, FLD_DESC, FLD_NUM, FLD_LEN_NUM, FLD_DEC_PREC, FLD_DATA_TYPE_TXT, FLD_FORMAT_TXT, FLD_DEF_VAL, FLD_START_POS_NUM, FLD_END_POS_NUM, 
+       IS_FLD_HASHSUM_FLG, IS_FLD_INDEX_FLG, IS_FLD_PROFILE_FLG, CRT_DT, CRT_USR_NM)
+       VALUES
+       (#{field.fileId}, #{field.recordTypeInd}, #{field.fieldName}, #{field.optionality}, #{field.fieldDesc}, #{field.fieldNum}, #{field.length}, #{field.decimalPrecision}, #{field.dataType}, 
+       #{field.dataFormat}, #{field.defaultValue}, #{field.startPosition}, #{field.endPosition}, #{field.isHashSumField}, #{field.isIndexField}, #{field.isProfileField}, 
+       DEFAULT, #{field.userNm})
+  </insert>
+  
+  <insert id='insertFieldStdRules' parameterType='com.uob.edag.model.FieldModel' >
+    INSERT INTO EDAG_FIELD_STD_RULES
+      (FILE_ID, FLD_NM, RCRD_TYP_CD, RULE_ID, CRT_DT, CRT_USR_NM)
+      VALUES
+        (
+            #{fileId}, #{fieldName}, #{recordTypeInd}, #{rule}, DEFAULT, #{userNm}
+        )
+  </insert>
+  
+  <insert id='insertLoadParams' parameterType='com.uob.edag.model.ProcessModel'>
+      INSERT ALL
+      <foreach collection="procParam" item="param" separator=" "> 
+        INTO EDAG_PROC_PARAMS
+        (PROC_ID, PARAM_NM, PARAM_VAL, CRT_DT, CRT_USR_NM)
+        VALUES
+        (#{procId}, #{param.paramName}, #{param.paramValue}, DEFAULT, #{userNm})
+      </foreach>
+      SELECT * FROM DUAL
+  </insert>
+  
+  <select id='selectAuditId' resultType="int">
+        SELECT SEQ_AUDIT_ID.NEXTVAL FROM DUAL
+    </select>
+  
+  <insert id='insertAuditEntry' parameterType='java.util.Map' useGeneratedKeys="true">
+      <selectKey keyProperty="id" resultType="int" order="BEFORE">
+        SELECT SEQ_AUDIT_ID.NEXTVAL FROM DUAL
+      </selectKey>
+      INSERT INTO EDAG_AUDIT_DETAIL
+      (AUDIT_ID, AUDIT_DT, USR_NM, USR_ACTION_TXT, STATUS_CD)
+      VALUES
+      (#{id}, SYSDATE, #{userName}, #{action}, #{status})
+  </insert>
+  
+  <delete id='removeProcessMaster' parameterType='int'>
+      DELETE FROM EDAG_PROCESS_MASTER
+      WHERE PROC_ID = #{procId}
+  </delete>
+  
+  <delete id='removeProcessCountry' parameterType='int'>
+      DELETE FROM EDAG_PROC_CTRY_DTL
+      WHERE PROC_ID = #{procId}
+  </delete>
+  
+  <delete id='removeLoadProcess' parameterType='int'>
+      DELETE FROM EDAG_LOAD_PROCESS
+      WHERE PROC_ID = #{procId}
+  </delete>
+  
+  <delete id='removeFileDetails' parameterType='int'>
+    DELETE FROM EDAG_FILE_DETAIL
+      WHERE FILE_ID = #{fileId}
+  </delete>
+  
+  <delete id='removeControlFileDetails' parameterType='int'>
+      DELETE FROM EDAG_CONTROL_FILE_DETAIL
+      WHERE CTRL_FILE_ID = #{controlFileId}
+  </delete>
+  
+  <delete id='removeFieldDetails' parameterType='int' >
+    DELETE FROM EDAG_FIELD_DETAIL
+      WHERE FILE_ID = #{fileId}
+  </delete>
+  
+  <delete id='removeFieldStdRules' parameterType='int' >
+    DELETE FROM EDAG_FIELD_STD_RULES
+      WHERE FILE_ID = #{fileId}
+  </delete>
+  
+  <delete id='removeLoadParams' parameterType='int'>
+      DELETE FROM EDAG_PROC_PARAM
+      WHERE PROC_ID = #{procId}
+  </delete>
+  
+  <update id='inactivateProcess' parameterType='java.util.Map'>
+      UPDATE EDAG_PROCESS_MASTER SET IS_ACT_FLG='N',UPD_DT=SYSDATE,UPD_USR_NM=#{userName} WHERE PROC_ID = #{procId}
+  </update>
+
+</mapper>

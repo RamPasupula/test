@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.ImpalaMapper">
+
+  <update id='runRefresh' parameterType='java.util.Map'>
+     REFRESH ${schemaName}.${tableName} PARTITION (${partitionInfo})
+  </update>
+
+   <update id='invalidate' parameterType='java.util.Map'>
+     INVALIDATE METADATA ${schemaName}.${tableName}
+  </update>
+
+  
+  <select id='getAttachNamesWithDocTypeImp' parameterType='java.util.Map' resultType='com.uob.edag.model.UNSFileTypeModel'>
+   ${hiveSQL}
+  </select>
+  
+</mapper>

@@ -1,0 +1,67 @@
+-- -----------------------------------------------------
+-- Data for table edf.edag_std_rule
+-- -----------------------------------------------------
+
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('1', 'Implicit to Explicit Decimal Conversion', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('2', 'Apply Default Value', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('3', 'Remove Junk Characters', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('4', 'Remove NULLs', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('5', 'Date Conversion for format YYYYMMDD', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('6', 'Date Conversion for format YYYYMMDDHHMMSS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('7', 'Date Conversion for format YYYY-MM-DD', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('8', 'Date Conversion for format YYYYMMDDHHMI', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('9', 'Date Conversion for format YYYY-MM-DD HH:MI:SS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('10', 'Date Conversion for format CCYY-MM-DD', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('11', 'Date Conversion for format 24HHMISS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('12', 'Implicit to Explicit : Precision 1', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('13', 'Implicit to Explicit : Precision 2', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('14', 'Implicit to Explicit : Precision 3', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('15', 'Implicit to Explicit : Precision 4', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('16', 'Implicit to Explicit : Precision 5', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('17', 'Implicit to Explicit : Precision 6', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('18', 'Implicit to Explicit : Precision 7', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('19', 'Implicit to Explicit : Precision 8', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('20', 'Implicit to Explicit : Precision 9', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('21', 'Implicit to Explicit : Precision 10', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('25', 'Numeric Data Type Validation', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('22', 'Date Conversion for format DDMMYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('23', 'Date Conversion for format HHMMSS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('24', 'Date Conversion for format MON YYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('26', 'Date Conversion for format MMM YYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('27', 'Date Conversion for format YYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('28', 'Date Conversion for format YYYY-MM-DD-HH.MM.SS.NNNNNN', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('29', 'Date Conversion for format DDMMYYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('30', 'Date Conversion for format YYYYDDD', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('31', 'Date Conversion for format DDDYYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('32', 'Date Conversion for format DD/MM/YY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('33', 'Date Conversion for format YYYY-MM-DD-HH.MM.SS.mmmmmm', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('34', 'Date Conversion for format MM/DD/YY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('35', 'Date Conversion for format 00YYYYMMDD', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('36', 'Date Conversion for format 00YYYYDDD', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('37', 'Date Conversion for format 00HHMMSS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('38', 'Date Conversion for format 00DDMMYYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('39', 'Date Conversion for format 00DDMMYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('40', 'Date Conversion for format 00DDDYYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('41', 'Date Conversion for format DD-MON-YYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('42', 'Date Conversion for format YYYYMMDD-HHMMSS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('43', 'Date Conversion for format YYYY/MM/DD', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('44', 'Date Conversion for format YYMMDD', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('45', 'Date Conversion for format HHMMSSss', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('46', 'Date Conversion for format YYYY-MM-DD-HH.MM.SS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('47', 'Date Conversion for format MM/DD/YYYY HH:MM:SS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('48', 'Date Conversion for format DD/MM/YYYY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('49', 'Date Conversion for format DD-MMM-YY', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('50', 'Date Conversion for format DD/MM/YYYY HH:MI:SS AM/PM', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('51', 'Date Conversion for format HH:MM:SS AM(PM)', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('52', 'Implicit to Explicit : Precision 11', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('53', 'Implicit to Explicit : Precision 12', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('54', 'Implicit to Explicit : Precision 13', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('55', 'Implicit to Explicit : Precision 14', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('56', 'Implicit to Explicit : Precision 15', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('57', 'Implicit to Explicit : Precision 16', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('58', 'Implicit to Explicit : Precision 17', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('59', 'Implicit to Explicit : Precision 18', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('60', 'Date Conversion for format DD/MM/YYYY HH:MI:SS', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO edag_std_rule (rule_id, rule_desc, is_act_fl, crt_dt, crt_usr_nm, upd_dt, upd_usr_nm) VALUES ('61', 'Date Conversion for format DD/MM/YYYY HH:MI', 'Y', DEFAULT, DEFAULT, NULL, NULL);
+
+COMMIT;

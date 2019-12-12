@@ -1,0 +1,32 @@
+# 07( BELL )
+# 00( NUL )
+# 0E( SHIFT IN )
+# 0F( SHIFT OUT )
+# A0( BREAKSPACE )
+# 0D( CONTROL+M )
+# 85( NEWLINE - WILL be removed from all the records irrespective of the field or at the end of record, however the writer ensures to
+# buffer appends a newline after end of record. )
+resetState: true
+bizDate: 29-05-2017
+producers: 4000
+stateFile: "statedb_sourcefiles"
+producer: !!com.uob.edag.scanners.LocalProducer
+    executorCount: 4000 # Executor for the no of files that are present.
+    job: !!com.uob.edag.runtime.Job
+        multistep: !!com.uob.edag.runtime.MultiStep
+            steps:
+                - !!com.uob.edag.runtime.ReplaceStep
+                    regexp: !regex "^[^\\x20-\\x7E]$"
+                    replace_pattern: "07,00,0E,0F,A0,0D,85"
+                    replace: "20"
+                - !!com.uob.edag.runtime.DelimiterStep
+                    fixedWidthsDelimiter: ","
+                    appendDelimiter: " "
+        destinationFilePrefix: "_1"
+
+scanner:  !!com.uob.edag.scanners.FilePatternScanner
+    #sourceFormat: !regex "^[a-zA-Z0-9]*/((?!previous)(?!processing)[a-zA-Z0-9]+)$"
+    sourceFormat: !regex "^[a-z0-9A-Z]*/processing/[A-Z]*.(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d.(19|20)\\d\\d(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])([01][1-9]|2[0-4])([0-5][0-9])([0-5][0-9])$"
+    path: /Users/cs186076/Documents/work/edf_parameterize/data/cdtransfer/
+    patterns:
+        - !regex "^[a-z0-9A-Z]*$"

@@ -1,0 +1,1 @@
+ssh -i $3 $4@$5 "bash -s" < ./remove_header_footer.sh $@

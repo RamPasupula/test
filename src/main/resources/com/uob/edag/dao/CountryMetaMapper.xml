@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.CountryMetaMapper">
+  
+  
+  <select id="getCountryMetaList" parameterType="HashMap" resultType="HashMap">
+   
+     select DISTINCT CTRY_CD
+     FROM EDAG_PROC_CTRY_DTL
+     WHERE PROC_ID = #{procId}
+  </select>
+  
+   
+   
+</mapper>

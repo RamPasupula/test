@@ -1,0 +1,51 @@
+create or replace view $!{viewName} (#foreach ($field in $fields)
+                                       $!{field.normalizedName} comment '$!{field.normalizedDescription}'
+                                       #if ($foreach.hasNext)
+                                         ,
+                                       #end
+                                     #end
+                                     , proc_instance_id, proc_ts, site_id, biz_dt)
+as   select #foreach ($field in $fields)
+         #{if} ($field.null)
+           CAST ( NULL as STRING ) 
+         #{else}
+           a.
+         #{end}
+         `$!{field.normalizedName}`
+         #{if} ($foreach.hasNext)
+           ,
+         #{end}
+       #{end} 
+       ,a.`proc_instance_id`,a.`proc_ts`,a.`site_id`,a.`biz_dt` 
+from $!{tableName} a, (select site_id, biz_dt, max(proc_instance_id) max_proc_instance_id
+                       from $!{tableName} 
+                       where #if ($siteIdConditionKey == "gd")
+                               site_id != 'ID'
+                             #elseif ($siteIdConditionKey == "so")
+                               site_id NOT IN ('MY','TH','CN','ID')
+                             #elseif ($siteIdConditionKey == "my")
+                               site_id = 'MY' 
+                             #elseif ($siteIdConditionKey == "th")
+                               site_id = 'TH' 
+                             #elseif ($siteIdConditionKey == "cn")
+                               site_id = 'CN' 
+                             #elseif ($siteIdConditionKey == "id")
+                               site_id = 'ID' 
+                             #{end}
+                       group by site_id, biz_dt) b 
+where #if ($siteIdConditionKey == "gd")
+        a.site_id != 'ID'
+      #elseif ($siteIdConditionKey == "so")
+        a.site_id NOT IN ('MY','TH','CN','ID')
+      #elseif ($siteIdConditionKey == "my")
+        a.site_id = 'MY' 
+      #elseif ($siteIdConditionKey == "th")
+        a.site_id = 'TH' 
+      #elseif ($siteIdConditionKey == "cn")
+        a.site_id = 'CN' 
+      #elseif ($siteIdConditionKey == "id")
+        a.site_id = 'ID' 
+      #{end}
+  and a.site_id = b.site_id 
+  and a.biz_dt = b.biz_dt 
+  and a.proc_instance_id = b.max_proc_instance_id ;

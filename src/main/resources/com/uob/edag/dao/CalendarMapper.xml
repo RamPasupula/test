@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.CalendarMapper">
+
+  <update id='rollOverDailyCalendar'>
+      UPDATE EDAG_BUSINESS_DATE SET PREV_BIZ_DT=CURR_BIZ_DT, CURR_BIZ_DT=CURR_BIZ_DT + INTERVAL '1' DAY, NEXT_BIZ_DT=NEXT_BIZ_DT + INTERVAL '1' DAY
+      WHERE FREQ_CD='D'
+  </update>
+
+  <update id='updateProcFlagDailyY'>
+      UPDATE EDAG_BUSINESS_DATE BD SET PROC_FLG='N'
+      WHERE EXISTS(SELECT 1 FROM EDAG_PROC_HOLIDAY
+      WHERE HOLIDAY_DT=BD.CURR_BIZ_DT AND
+      SRC_SYS_CD=BD.SRC_SYS_CD AND CTRY_CD=BD.CTRY_CD)
+  </update>
+  
+  <update id='updateProcFlagDailyN'>
+      UPDATE EDAG_BUSINESS_DATE BD SET PROC_FLG='Y' 
+      WHERE NOT EXISTS(SELECT 1 FROM EDAG_PROC_HOLIDAY
+      WHERE HOLIDAY_DT=BD.CURR_BIZ_DT AND
+      SRC_SYS_CD=BD.SRC_SYS_CD AND CTRY_CD=BD.CTRY_CD)
+  </update>
+  
+  <select id='retrieveCurrentBizDate' parameterType='java.util.Map' resultType='com.uob.edag.model.CalendarModel'>
+    SELECT
+      SRC_SYS_CD as srcSysCd,
+      CTRY_CD as ctryCd,
+      FREQ_CD as freqCd,
+      TO_CHAR(PREV_BIZ_DT,'yyyy-MM-dd') as prevBizDate,
+      TO_CHAR(CURR_BIZ_DT,'yyyy-MM-dd') as currBizDate,
+      TO_CHAR(NEXT_BIZ_DT,'yyyy-MM-dd') as nextBizDate,
+      PROC_FLG as procFlag
+    FROM 
+      EDAG_BUSINESS_DATE
+      WHERE
+        SRC_SYS_CD = #{srcSysCd}
+        AND CTRY_CD = #{ctryCd}
+        AND FREQ_CD = #{freqCd}
+  </select>
+  
+  <select id='getCurrentCalendarEntries' resultType='com.uob.edag.model.CalendarModel'>
+    SELECT
+      SRC_SYS_CD as srcSysCd,
+      CTRY_CD as ctryCd,
+      FREQ_CD as freqCd,
+      TO_CHAR(PREV_BIZ_DT,'yyyy-MM-dd') as prevBizDate,
+      TO_CHAR(CURR_BIZ_DT,'yyyy-MM-dd') as currBizDate,
+      TO_CHAR(NEXT_BIZ_DT,'yyyy-MM-dd') as nextBizDate,
+      PROC_FLG as procFlag
+    FROM 
+      EDAG_BUSINESS_DATE
+  </select>
+
+  <update id='updateMonthlyCalendarEntry' parameterType='com.uob.edag.model.CalendarModel'>
+      UPDATE EDAG_BUSINESS_DATE 
+      SET 
+      PREV_BIZ_DT=TO_DATE(#{prevBizDate},'YYYY-MM-DD'), 
+      CURR_BIZ_DT=TO_DATE(#{currBizDate},'YYYY-MM-DD'), 
+      NEXT_BIZ_DT=NULL
+      WHERE SRC_SYS_CD = #{srcSysCd}
+      AND CTRY_CD = #{ctryCd}
+      AND FREQ_CD='M'
+  </update>
+</mapper>

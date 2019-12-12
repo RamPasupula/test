@@ -1,0 +1,43 @@
+Local mac HDFS, YARN and Hive installation
+
+http://zhongyaonan.com/hadoop-tutorial/setting-up-hadoop-2-6-on-mac-osx-yosemite.html
+https://amodernstory.com/2015/03/29/installing-hive-on-mac/
+
+https://archive.cloudera.com/cdh5/cdh/5/
+https://www.cloudera.com/documentation/enterprise/release-notes/topics/cdh_vd_cdh_package_tarball_58.html#concept_vd0_ydn_yk
+
+hadoop-2.6.0-cdh5.8.0.tar.gz
+hive-1.1.0-cdh5.8.0.tar.gz
+
+sudo mkdir /usr/local/hadoop
+chmod cb186046:admin /usr/local/hadoop
+chown cb186046:admin /usr/local/hadoop
+sudo chown cb186046:admin /usr/local/hadoop
+mv hadoop-2.6.0-cdh5.8.0.tar.gz /usr/local/hadoop/
+cd /usr/local/hadoop/
+tar -xvf hadoop-2.6.0-cdh5.8.0.tar.gz
+ll hadoop-2.6.0-cdh5.8.0/
+ll hadoop-2.6.0-cdh5.8.0/etc/
+rm hadoop-2.6.0-cdh5.8.0.tar.gz
+
+http://apache.arvixe.com/hive/hive–1.1.0/apache-hive–1.1.0-bin.tar.gz
+
+
+Docker container with oracle 12.1 installation
+
+
+https://github.com/wnameless/docker-oracle-xe-11g
+
+docker run -d -p 49160:22 -p 49161:1521 -e ORACLE_ALLOW_REMOTE=true wnameless/oracle-xe-11g
+
+
+Docker container with KDC installation
+
+https://community.hortonworks.com/articles/54275/apache-nifi-100-kerberos-authentication.html
+https://github.com/tillt/docker-kdc
+cd ~/workspace/docker-kdc
+./kdc.sh build
+./kdc.sh start
+$(./kdc.sh shellinit)
+kinit cb186046@KDC.LOCAL
+cp ~/workspace/docker-kdc/krb5.keytab /usr/local/hadoop/hadoop-2.6.0-cdh5.8.0/etc/hadoop/

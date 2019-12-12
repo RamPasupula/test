@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.JobPromotionMapper">
+  
+  <select id='retrieveProcessMaster' parameterType='string' resultType='com.uob.edag.model.ProcessModel'>
+    SELECT
+      PROC_ID as procID, 
+      PROC_NM as procName, 
+      PROC_TYPE_CD as procTypeCd,
+      PROC_GRP_ID as procGroupID,
+      PROC_DESC as procDesc, 
+      PROC_FREQ_CD as procFreq, 
+      SRC_SYS_CD as srcSystemID, 
+      CTRY_CD as ctryCd
+    FROM 
+      EDAG_PROCESS_MASTER
+      WHERE
+        PROC_ID = #{procID}
+  </select>
+  
+  <select id='retrieveLoadProcess' parameterType='string' resultType='com.uob.edag.model.DestModel'>
+    SELECT
+      'HADOOP' as type,
+      PROC_ID as processId, 
+      TGT_DIR_NM as hadoopDir,
+      TGT_FORMAT_ID as hadoopFormatID,
+      TGT_COMPR_TYPE_ID as hadoopCompressID,
+      TGT_DB_NM as hiveDBName,
+      TGT_TBL_NM as hiveTableName,
+      TGT_TBL_PART_TXT as hivePartition,
+      TGT_APPLY_TYPE_ID as loadTypeID,
+      STG_DIR_NM as stagingDir,
+      STG_DB_NM as stagingDBName,
+      STG_TBL_NM as stagingTableName,
+      STG_TBL_PART_TXT as stagingHivePartition
+    FROM 
+      EDAG_LOAD_PROCESS
+      WHERE
+        PROC_ID = #{procID}
+  </select>
+  
+  <select id='retrieveFileDetails' parameterType='string' resultType='com.uob.edag.model.FileModel'>
+    SELECT
+      FD.FILE_ID as fileID,
+      FD.PROC_ID as processId, 
+      FD.DIR_NM as sourceDirectory, 
+      FD.FILE_NM as sourceFileName, 
+      FD.FILE_EXTN_NM as sourceFileExtn, 
+      FD.CTRL_FILE_ID as controlFileID, 
+      CFD.CTRL_FILE_DIR_TXT as controlFileDir,
+      CFD.CTRL_FILE_NM as controlFileName,
+      CFD.CTRL_FILE_EXTN_NM as controlFileExtn,
+      CFD.CTRL_FILE_LAYOUT_CD as controlFileLayoutCd,
+      CFD.CTRL_FILE_COL_DELIM_TXT as controlFileColumnDelimiter,
+      CFD.CTRL_FILE_TXT_DELIM_TXT as controlFileTextDelimiter,
+      FD.CTRL_INFO_CD as controlInfo,
+      FD.FILE_TYPE_CD as sourceFileTypeCd, 
+      FD.FILE_LAYOUT_CD as sourceFileLayoutCd, 
+      FD.FILE_COL_DELIM_TXT as columnDelimiter, 
+      FD.FILE_TXT_DELIM_TXT as textDelimiter, 
+      FD.HDR_LINE_NUM as headerLines, 
+      FD.FTR_LINE_NUM as trailerLines, 
+      FD.ACHV_DIR_NM as sourceArchivalDir
+      FROM 
+        EDAG_FILE_DETAIL FD LEFT OUTER JOIN EDAG_CONTROL_FILE_DETAIL CFD
+      WHERE 
+        FD.CTRL_FILE_ID = CFD.CTRL_FILE_ID
+        AND FD.PROC_ID = #{procID}
+  </select>
+  
+  <select id='retrieveFieldDetails' parameterType='string' resultType='com.uob.edag.model.FieldModel'>
+    SELECT
+      FLD_NM as fieldName,
+      FLD_OPTIONALITY as optionality,
+      FLD_DESC as fieldDesc,
+      FLD_LEN_NUM as length,
+      FLD_DATA_TYPE_TXT as dataType,
+      FLD_FORMAT_TXT as dataFormat,
+      FLD_START_POS_NUM as startPosition,
+      FLD_END_POS_NUM as endPosition, 
+      IS_FLD_HASHSUM_FLG as isHashSumField,
+      IS_FLD_INDEX_FLG as isIndexField,
+      IS_FLD_PROFILE_FLG as isProfileField
+    FROM 
+      EDAG_FIELD_DETAIL
+    WHERE
+      FILE_ID = #{fileID}
+      AND RCRD_TYP_CD='D' 
+  </select>
+  
+  <select id='retrieveControlFieldDetails' parameterType='string' resultType='com.uob.edag.model.FieldModel'>
+    SELECT
+      FLD_NM as fieldName,
+      FLD_OPTIONALITY as optionality,
+      FLD_DESC as fieldDesc,
+      FLD_LEN_NUM as length,
+      FLD_DATA_TYPE_TXT as dataType,
+      FLD_FORMAT_TXT as dataFormat,
+      FLD_START_POS_NUM as startPosition,
+      FLD_END_POS_NUM as endPosition, 
+      IS_FLD_HASHSUM_FLG as isHashSumField,
+      IS_FLD_INDEX_FLG as isIndexField,
+      IS_FLD_PROFILE_FLG as isProfileField
+    FROM 
+      EDAG_FIELD_DETAIL
+    WHERE
+      FILE_ID = #{fileID}
+      AND (RCRD_TYP_CD='C' OR RCRD_TYPE_CD='HT')
+  </select>
+
+</mapper>

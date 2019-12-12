@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <appender name="ROLLINGFILE" class="org.apache.log4j.RollingFileAppender"> 
+    <param name="Threshold" value="DEBUG" />
+    <param name="file" value="/tmp/logs/${logFileName}"/> 
+    <param name="MaxFileSize" value="10MB" />
+    <param name="MaxBackupIndex" value="5" />
+    <layout class="com.uob.edag.log4j.MultiPatternLayout"> 
+      <param name="ConversionPattern" value="%d{ISO8601} - %-5p [%t:%c{1}] %m%n"/> 
+      <param name="ConversionPattern" value="[%t] %m%n" />
+      <param name="PatternSelector" value="default=0,com.uob.edag.processor.FRRLoader$StreamLogger=1" />
+    </layout> 
+  </appender> 
+  
+  <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender"> 
+    <param name="Target" value="System.out"/> 
+    <param name="Threshold" value="INFO" />
+    <layout class="com.uob.edag.log4j.MultiPatternLayout"> 
+      <param name="ConversionPattern" value="%d{ISO8601} - %-5p [%t:%c{1}] %m%n"/> 
+      <param name="ConversionPattern" value="[%t] %m%n" />
+      <param name="PatternSelector" value="default=0,com.uob.edag.processor.FRRLoader$StreamLogger=1" />
+    </layout>
+  </appender> 
+
+  <root> 
+    <priority value ="debug" /> 
+    <appender-ref ref="ROLLINGFILE" /> 
+    <appender-ref ref="CONSOLE" />
+  </root>
+  
+  <logger name="org">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.codehale">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.jcraft">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.fasterxml">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.graphbuilder">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.google">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.sun">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.facebook">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.jolbox">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.jamesmurty">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.thoughtworks">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.cloudera">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.teradata">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="com.ncr.teradata">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="oracle">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="javax">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="net">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="au">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="parquet">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="shaded">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="jline">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+  
+  <logger name="contribs">
+    <level value="info"/>
+    <appender-ref ref="ROLLINGFILE" />
+  </logger>
+</log4j:configuration>

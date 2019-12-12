@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.TeradataMapper">
+  
+  <select id='getRowCount' parameterType='java.util.Map' resultType='java.lang.Integer'>
+    SELECT COUNT(1) as row_count
+    FROM ${tableName}
+  </select>
+  
+  <select id='getSumOfHashSum' parameterType='java.util.Map' resultType='java.math.BigDecimal'>
+    SELECT SUM("${columnName}") as hashSum
+    FROM ${tableName}
+  </select>
+  
+  <update id="dropTable" parameterType="java.util.Map">
+    DROP TABLE ${tableName}
+  </update>
+  
+  <update id="truncateTable" parameterType="java.util.Map">
+    DELETE FROM ${tableName}
+  </update>
+  
+  <select id="showTable" parameterType="java.util.Map" resultType="java.lang.String">
+    SHOW TABLE ${databaseName}.${tableName}
+  </select>
+</mapper>

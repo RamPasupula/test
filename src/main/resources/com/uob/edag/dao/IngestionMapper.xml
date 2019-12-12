@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.IngestionMapper">
+  
+  <select id='retrieveProcessMaster' parameterType='string' resultType='com.uob.edag.model.ProcessModel'>
+    SELECT
+      PROC_ID as procId, 
+      PROC_NM as procName, 
+      PROC_TYPE_CD as procTypeCd,
+      PROC_GRP_ID as procGroupID,
+      PROC_DESC as procDesc, 
+      PROC_FREQ_CD as procFreq, 
+      SRC_SYS_CD as srcSystemID,
+      DEPLOY_NODE_NM as deployNode,
+      PROC_CRITICALITY_CD as procPriority
+    FROM 
+      EDAG_PROCESS_MASTER
+      WHERE
+        PROC_ID = #{procId}
+        AND IS_ACT_FLG='Y'
+  </select>
+
+  <select id='retrieveProcessList' resultType='com.uob.edag.model.ProcessModel'>
+    SELECT
+    PROC_ID as procId,
+    PROC_NM as procName,
+    PROC_TYPE_CD as procTypeCd,
+    PROC_GRP_ID as procGroupID,
+    PROC_DESC as procDesc,
+    PROC_FREQ_CD as procFreq,
+    SRC_SYS_CD as srcSystemID,
+    DEPLOY_NODE_NM as deployNode,
+    PROC_CRITICALITY_CD as procPriority
+    FROM
+    EDAG_PROCESS_MASTER
+    WHERE
+    IS_ACT_FLG='Y'
+  </select>
+  
+  <select id='retrieveProcessCountry' parameterType='string' resultType="com.uob.edag.model.CountryAttributes" >
+    SELECT
+      CTRY_CD as countryCode, charset, encoding, frr_empty_bizdate_ctrl as frrEmptyBizDateControl, frr_mapper_count as frrMapperCount, 
+      referenced_file_folder as referencedFileFolder
+    FROM 
+      EDAG_PROC_CTRY_DTL
+      WHERE
+        PROC_ID = #{procId}
+        AND IS_ACT_FLG='Y'
+  </select>
+    
+  <select id='retrieveLoadProcess' parameterType='string' resultType='com.uob.edag.model.DestModel'>
+    SELECT
+      'HADOOP' as type,
+      PROC_ID as processId, 
+      TGT_DIR_NM as hadoopDir,
+      TGT_FORMAT_CD as hadoopFormatCd,
+      TGT_COMPR_TYPE_CD as hadoopCompressCd,
+      TGT_DB_NM as hiveDBName,
+      TGT_TBL_NM as hiveTableName,
+      TGT_TBL_PART_TXT as hivePartition,
+      TGT_APLY_TYPE_CD as loadTypeCd,
+      STG_DIR_NM as stagingDir,
+      STG_DB_NM as stagingDBName,
+      STG_TBL_NM as stagingTableName,
+      STG_TBL_PART_TXT as stagingHivePartition,
+      ERR_THRESHOLD as hiveErrorThreshold,
+      CRT_DT as createdDatetime,
+      CRT_USR_NM as createdBy,
+      UPD_DT as lastUpdatedDatetime,
+      UPD_USR_NM as lastUpdatedBy
+    FROM 
+      EDAG_LOAD_PROCESS
+      WHERE
+        PROC_ID = #{procId}
+  </select>
+  
+  <select id='retrieveLoadProcessByTargetTable' parameterType='java.util.Map' resultType='com.uob.edag.model.DestModel'>
+    SELECT
+      'HADOOP' as type,
+      L.PROC_ID as processId, 
+      L.TGT_DIR_NM as hadoopDir,
+      L.TGT_FORMAT_CD as hadoopFormatId,
+      L.TGT_COMPR_TYPE_CD as hadoopCompressId,
+      L.TGT_DB_NM as hiveDBName,
+      L.TGT_TBL_NM as hiveTableName,
+      L.TGT_TBL_PART_TXT as hivePartition,
+      L.TGT_APLY_TYPE_CD as loadTypeId,
+      L.STG_DIR_NM as stagingDir,
+      L.STG_DB_NM as stagingDBName,
+      L.STG_TBL_NM as stagingTableName,
+      L.STG_TBL_PART_TXT as stagingHivePartition,
+      L.ERR_THRESHOLD as hiveErrorThreshold,
+      L.CRT_DT as createdDatetime,
+      L.CRT_USR_NM as createdBy,
+      L.UPD_DT as lastUpdatedDatetime,
+      L.UPD_USR_NM as lastUpdatedBy
+    FROM 
+      EDAG_LOAD_PROCESS L, EDAG_PROCESS_MASTER M
+      WHERE M.PROC_TYPE_CD = '21'
+        and lower(L.TGT_DB_NM) = #{targetSchemaName}
+        and lower(L.TGT_TBL_NM) = #{targetTableName}
+        and L.PROC_ID = M.PROC_ID
+  </select>
+  
+  <select id='retrieveProcessFileName' parameterType='string' resultType='string'>
+    SELECT
+      FILE_NM as processFileName
+    FROM 
+      EDAG_PROCESS_LOG
+      WHERE
+        PROC_INSTANCE_ID = #{procInstanceId}
+  </select>
+  
+  <select id='retrieveSourceTableDetail' parameterType='string' resultType='com.uob.edag.model.SourceTableDetail'>
+    SELECT S.PROC_ID as procId, S.SRC_DB_CONNECTION_NM as srcDbConnectionNm, S.SRC_SCHEMA_NM as srcSchemaNm, S.SRC_TBL_NM as srcTblNm, 
+           S.CRT_DT as createdDatetime, S.CRT_USR_NM as createdBy, 
+           S.UPD_DT as lastUpdatedDatetime, S.UPD_USR_NM as lastUpdatedBy
+    FROM EDAG_SOURCE_TABLE_DETAIL S
+    WHERE S.PROC_ID = #{procId}
+  </select>
+  
+  <select id='retrieveAdobeProcSubProcMap' parameterType='string' resultType='String'>
+    SELECT 
+    LISTAGG(PROC_ID, ',') WITHIN GROUP (ORDER BY PROC_ID)  AS procIdList 
+    FROM EDAG_ADB_PROC_SUB_PROC_MAP 
+    GROUP BY MASTER_PROC_ID 
+    HAVING MASTER_PROC_ID = #{procId}
+  </select>
+  
+   <select id='retrieveSourceDirectory' parameterType='string' resultType='String'>
+    select 
+    ctrl_file_dir_txt from 
+    edag_file_detail A inner join edag_control_file_detail B 
+    on A. ctrl_file_id = B.ctrl_file_id 
+    where A.proc_id = #{procId}
+  </select>
+  
+  <select id='retrieveFileDetails' parameterType='string' resultType='com.uob.edag.model.FileModel'>
+    SELECT
+      FD.FILE_ID as fileId,
+      FD.PROC_ID as processId, 
+      FD.DIR_NM as sourceDirectory, 
+      FD.FILE_NM as sourceFileName, 
+      FD.FILE_EXTN_NM as sourceFileExtn, 
+      FD.CTRL_FILE_ID as controlFileId, 
+      CFD.CTRL_FILE_DIR_TXT as controlFileDir,
+      CFD.CTRL_FILE_NM as controlFileName,
+      CFD.CTRL_FILE_EXTN_NM as controlFileExtn,
+      CFD.CTRL_FILE_LAYOUT_CD as controlFileLayoutCd,
+      CFD.CTRL_FILE_COL_DELIM_TXT as controlFileColumnDelimiter,
+      CFD.CTRL_FILE_TXT_DELIM_TXT as controlFileTextDelimiter,
+      CFD.CTRL_FILE_EXPLICIT_DEC_POINT as ctrlFileExplicitDecimalPoint,
+      FD.CTRL_INFO_CD as controlInfo,
+      FD.FILE_TYPE_CD as sourceFileTypeCd, 
+      FD.FILE_LAYOUT_CD as sourceFileLayoutCd, 
+      FD.FILE_COL_DELIM_TXT as columnDelimiter, 
+      FD.FILE_TXT_DELIM_TXT as textDelimiter, 
+      FD.HDR_LINE_NUM as headerLines, 
+      FD.FTR_LINE_NUM as trailerLines, 
+      FD.ACHV_DIR_NM as sourceArchivalDir,
+      FD.FILE_EXPLICIT_DEC_POINT as explicitDecimalPoint,
+      FD.USE_SPARK_BASED_INGESTION as useSparkBasedIngestion
+      FROM 
+        EDAG_FILE_DETAIL FD LEFT OUTER JOIN EDAG_CONTROL_FILE_DETAIL CFD ON (FD.CTRL_FILE_ID = CFD.CTRL_FILE_ID)
+      WHERE 
+        FD.PROC_ID = #{procId}
+  </select>
+  
+  <select id='retrieveFieldDetails' parameterType='int' resultType='com.uob.edag.model.FieldModel'>
+    SELECT
+      #{fileId} as fileId,
+      FLD_NM as fieldName,
+      FLD_NUM as fieldNum,
+      RCRD_TYP_CD as recordTypeInd,
+      FLD_OPTIONALITY as opt,
+      FLD_DESC as fieldDesc,
+      FLD_LEN_NUM as length,
+      FLD_DEC_PREC as decimalPrecision,
+      FLD_DATA_TYPE_TXT as dataType,
+      FLD_FORMAT_TXT as dataFormat,
+      FLD_DEF_VAL as defaultValue,
+      FLD_START_POS_NUM as startPosition,
+      FLD_END_POS_NUM as endPosition, 
+      IS_FLD_HASHSUM_FLG as isHashSumField,
+      IS_FLD_INDEX_FLG as isIndexField,
+      IS_FLD_PROFILE_FLG as isProfileField,
+      FLD_BIZ_TERM as bizTerm,
+      FLD_BIZ_DEFINITION as bizDefinition, 
+      FLD_SYNONYMS as synonyms,
+      FLD_USAGE_CONTEXT as usageContext,
+      FLD_SYSTEM_STEWARD as systemSteward,
+      FLD_SOURCE_SYSTEM as sourceSystem,
+      FLD_SOURCE_TABLE as sourceTable,
+      FLD_SOURCE_FIELD_NAME as sourceFieldName,
+      FLD_SOURCE_FIELD_DESC as sourceFieldDesc,
+      FLD_SOURCE_FIELD_TYPE as sourceFieldType,
+      FLD_SOURCE_FIELD_LENGTH as sourceFieldLength,
+      FLD_SOURCE_FIELD_FORMAT as sourceFieldFormat,
+      FLD_SOURCE_DATA_CATEGORY as sourceDataCategory,
+      FLD_LOV_CODE_AND_DESC as lovCodeAndDesc,
+      FLD_OPTIONALITY_2 as optionality_2,
+      FLD_SYSDATA_VALIDATION_LOGIC as sysdataValidationLogic,
+      FLD_DATA_AVAILABILITY as dataAvailability,
+      REGULAR_EXPRESSION as fieldRegExpression
+    FROM 
+      EDAG_FIELD_DETAIL
+    WHERE
+      FILE_ID = #{fileId}
+      AND (RCRD_TYP_CD='FI' OR RCRD_TYP_CD='PK' OR RCRD_TYP_CD='FK' OR RCRD_TYP_CD='BK')
+    ORDER BY FLD_NUM  
+  </select>
+  
+  <select id='retrieveControlFieldDetails' parameterType='int' resultType='com.uob.edag.model.FieldModel'>
+    SELECT
+      #{fileId} as fileId,
+      FLD_NM as fieldName,
+      FLD_NUM as fieldNum,
+      RCRD_TYP_CD as recordTypeInd,
+      FLD_OPTIONALITY as opt,
+      FLD_DESC as fieldDesc,
+      FLD_LEN_NUM as length,
+      FLD_DEC_PREC as decimalPrecision,
+      FLD_DATA_TYPE_TXT as dataType,
+      FLD_FORMAT_TXT as dataFormat,
+      FLD_DEF_VAL as defaultValue,
+      FLD_START_POS_NUM as startPosition,
+      FLD_END_POS_NUM as endPosition, 
+      IS_FLD_HASHSUM_FLG as isHashSumField,
+      IS_FLD_INDEX_FLG as isIndexField,
+      IS_FLD_PROFILE_FLG as isProfileField
+    FROM 
+      EDAG_FIELD_DETAIL
+    WHERE
+      FILE_ID = #{fileId}
+      AND (RCRD_TYP_CD='C' OR RCRD_TYP_CD='HR' OR RCRD_TYP_CD='FR')
+  </select>
+  
+  <select id='retrieveFieldStdRules' parameterType='com.uob.edag.model.FieldModel' resultType='int'>
+    SELECT
+      RULE_ID as ruleId
+    FROM 
+      EDAG_FIELD_STD_RULES
+    WHERE
+      FILE_ID = #{fileId}
+      AND FLD_NM = #{fieldName}
+      AND RCRD_TYP_CD = #{recordTypeInd}
+  </select>
+  
+  <select id='retrieveLoadParams' parameterType='string' resultType='com.uob.edag.model.ProcessParam'>
+    SELECT
+      PARAM_NM as paramName,
+      PARAM_VAL as paramValue
+    FROM 
+      EDAG_PROC_PARAM
+    WHERE
+      PROC_ID = #{procId}
+  </select>
+  
+  <select id="getProcessInstance" parameterType="string" resultType="com.uob.edag.model.ProcessInstanceModel">
+    SELECT PROC_INSTANCE_ID as procInstanceId,
+           BIZ_DT as bizDate,
+           PROC_ID as procId,
+           SRC_SYS_CD as sourceSystemId,
+           CTRY_CD as countryCd,
+           PROC_START_DT as startTime,
+           PROC_STATUS_CD as status,
+           FILE_NM as fileNm,
+           PROC_END_DT as endTime,
+           PROC_ERROR_TXT as errorTxt
+    FROM EDAG_PROCESS_LOG
+    WHERE PROC_INSTANCE_ID = #{procInstanceId}       
+  </select>
+  
+  <insert id='insertProcessLog' parameterType='com.uob.edag.model.ProcessInstanceModel'>
+      INSERT INTO EDAG_PROCESS_LOG
+      (PROC_INSTANCE_ID, BIZ_DT, PROC_ID, SRC_SYS_CD, CTRY_CD, PROC_START_DT, PROC_STATUS_CD)
+      VALUES
+      (#{procInstanceId}, TO_DATE(#{bizDate},'YYYY-MM-DD'), #{procId}, #{sourceSystemId}, #{countryCd}, #{startTime}, #{status})
+  </insert>
+
+  <insert id='insertLoadedFileLog' parameterType='com.uob.edag.model.ProcessInstanceModel'>
+      INSERT INTO EDAG_LOADED_FILE_LOG
+      (PROC_ID, PROC_INSTANCE_ID, SOURCE_FILE_NAME, ROW_COUNT)
+      VALUES
+      (#{procId}, #{procInstanceId}, #{tempFileNm}, #{tempFileRowCount})
+  </insert>
+  
+  <update id='updateProcessLogFileName' parameterType='com.uob.edag.model.ProcessInstanceModel'>
+      UPDATE EDAG_PROCESS_LOG
+      SET
+        FILE_NM = #{fileNm}
+      WHERE PROC_INSTANCE_ID = #{procInstanceId}
+  </update>
+  
+  <update id='updateProcessLog' parameterType='com.uob.edag.model.ProcessInstanceModel'>
+      UPDATE EDAG_PROCESS_LOG
+      SET
+        PROC_END_DT = #{endTime},
+        PROC_STATUS_CD = #{status},
+        PROC_ERROR_TXT = #{errorTxt},
+        HOUR_RUN = #{hourToRun}
+      WHERE PROC_INSTANCE_ID = #{procInstanceId}
+  </update>
+  
+  <insert id='insertStageLog' parameterType='com.uob.edag.model.StageModel'>
+      INSERT INTO EDAG_PROCESS_STAGE_LOG
+      (STAGE_ID, PROC_INSTANCE_ID, STAGE_START_DT, STAGE_STATUS_CD)
+      VALUES
+      (#{stageId}, #{procInstanceId}, #{startTime}, #{status})
+  </insert>
+  
+  <update id='updateStageLog' parameterType='com.uob.edag.model.StageModel'>
+      UPDATE EDAG_PROCESS_STAGE_LOG
+      SET
+        STAGE_END_DT = #{endTime},
+        STAGE_STATUS_CD = #{status},
+        STAGE_ERROR_TXT = #{error},
+        HASHSUM_FLD = #{hashsumFld},
+        ROWS_INPUT = #{srcRowCount}, 
+        SRC_HASHSUM_AMT = #{srcHashsumAmt},
+        TGT_HASHSUM_AMT = #{destHashsumAmt}, 
+        ROWS_INSERTED = #{destRowCount},
+        ROWS_ET = #{etErrorRowCount},
+        ROWS_UV = #{uvErrorRowCount},
+        TOOL_PROC_ID = #{toolProcId},
+        FRR_EMPTY_BIZDATE_CTRL = #{FRREmptyBizDateControl},
+        ACTUAL_BIZ_DT = #{actualBizDate},
+        ROWS_REJECTED = #{totalErrorRowCount},
+        TGT_DB_NM = #{destDbName},
+        TGT_TBL_NM = #{destTableName},
+        TGT_ERR_TBL_NM = #{destErrorTableName}
+      WHERE PROC_INSTANCE_ID = #{procInstanceId}
+      AND STAGE_ID = #{stageId}
+  </update>
+  
+    <update id='updateStageNewStatus' parameterType='com.uob.edag.model.StageModel'>
+      UPDATE EDAG_PROCESS_STAGE_LOG
+      SET
+        STAGE_STATUS_CD = #{status},
+        STAGE_ERROR_TXT = #{error}
+      WHERE PROC_INSTANCE_ID = #{procInstanceId}
+      AND STAGE_ID = #{stageId}
+  </update>
+  
+  <select id='evaluateBizDtExpr' parameterType='string' resultType='string'>
+      SELECT TO_CHAR(${_parameter}, 'YYYY-MM-dd') FROM DUAL
+  </select>
+  
+  <select id='getPrevRunStatus' parameterType='com.uob.edag.model.ProcessInstanceModel' resultType='com.uob.edag.model.ProcessInstanceModel'>
+      SELECT PROC_INSTANCE_ID as procInstanceId, 
+        PROC_STATUS_CD as status, 
+        PROC_END_DT as endTime FROM 
+      (SELECT 
+        PROC_INSTANCE_ID, 
+        PROC_STATUS_CD, 
+        PROC_END_DT
+      FROM EDAG_PROCESS_LOG
+      WHERE BIZ_DT=TO_DATE(#{bizDate},'yyyy-MM-dd') 
+      AND PROC_ID=#{procId}
+      AND SRC_SYS_CD=#{sourceSystemId}
+      AND CTRY_CD=#{countryCd}
+      AND PROC_INSTANCE_ID != #{procInstanceId}
+      <if  test="hourToRun != null">
+      	AND HOUR_RUN = '${hourToRun}'
+	  </if>
+	  <if  test="hourToRun == null">
+	    AND HOUR_RUN is null
+	  </if>
+      ORDER BY PROC_START_DT DESC)
+      WHERE ROWNUM &lt; 2
+  </select>
+  
+  <select id='getStageInfo' parameterType='com.uob.edag.model.ProcessInstanceModel' resultType='com.uob.edag.model.StageModel'>
+      SELECT 
+        STAGE_ID as stageID,
+      PROC_INSTANCE_ID as procInstanceId,
+      STAGE_START_DT as startTime,
+      STAGE_END_DT as endTime,
+      STAGE_STATUS_CD as status,
+      STAGE_ERROR_TXT as error,
+      HASHSUM_FLD as hashsumFld,
+      ROWS_INPUT as srcRowCount,
+      SRC_HASHSUM_AMT as srcHashsumAmt,
+      TGT_HASHSUM_AMT as destHashsumAmt,
+      ROWS_INSERTED as destRowCount
+      FROM EDAG_PROCESS_STAGE_LOG
+      WHERE PROC_INSTANCE_ID=#{procInstanceId}
+  </select>
+  
+  <select id="getStageInfoByProcessAndStageID" parameterType="java.util.Map" resultType="com.uob.edag.model.StageModel">
+    SELECT SL.STAGE_ID as stageID, 
+           SL.PROC_INSTANCE_ID as procInstanceId,
+      	   SL.STAGE_START_DT as startTime,
+           SL.STAGE_END_DT as endTime,
+           SL.STAGE_STATUS_CD as status,
+           SL.STAGE_ERROR_TXT as error,
+           SL.HASHSUM_FLD as hashsumFld,
+      	   SL.ROWS_INPUT as srcRowCount,
+           SL.SRC_HASHSUM_AMT as srcHashsumAmt,
+           SL.TGT_HASHSUM_AMT as destHashsumAmt,
+           SL.ROWS_INSERTED as destRowCount
+    FROM EDAG_PROCESS_STAGE_LOG SL, EDAG_PROCESS_LOG L
+    WHERE L.PROC_ID = #{processID}
+      AND L.BIZ_DT = TO_DATE(#{businessDate}, 'yyyy-mm-dd')
+      AND L.CTRY_CD = #{countryCode}
+      AND SL.PROC_INSTANCE_ID = L.PROC_INSTANCE_ID
+      AND SL.STAGE_ID = #{stageID}
+    ORDER BY SL.STAGE_START_DT DESC  
+  </select>
+  
+  <select id='getBizDate' parameterType='map' resultType='string'>
+	SELECT TO_CHAR(EBD.CURR_BIZ_DT, 'YYYY-MM-dd')
+	FROM EDAG_BUSINESS_DATE EBD, EDAG_PROCESS_MASTER EPM
+	WHERE EPM.SRC_SYS_CD=EBD.SRC_SYS_CD
+	AND EPM.PROC_FREQ_CD=EBD.FREQ_CD
+	AND EBD.CTRY_CD=#{countryCd}
+	AND EPM.PROC_ID=#{procId}
+  </select>
+
+  <select id='getTDUnsupportedCharacterReplacement' parameterType="map" resultType='com.uob.edag.model.TDUnsupportedCharacterReplacement'>
+    SELECT PROC_ID as processID, CTRY_CD as countryCode, FLD_NM as fieldName, REPLACEMENT_CHAR as replacementChar
+    FROM EDAG_LOAD_TD_CHAR_REPLACE
+    WHERE PROC_ID = #{procId}
+      AND CTRY_CD = #{ctryCd}
+  </select>
+  
+  <resultMap type="java.util.HashMap" id="controlCharsReplacementMap">
+    <result property="key" column="CTRL_CHAR_PATTERN" />
+    <result property="value" column="REPLACEMENT_CHARS" />
+  </resultMap>
+  
+  <select id='getControlCharsReplacement' parameterType='map' resultMap="controlCharsReplacementMap">
+    SELECT CTRL_CHAR_PATTERN, REPLACEMENT_CHARS
+    FROM EDAG_PROC_CTRY_CTRL_CHAR
+    WHERE PROC_ID = #{procId}
+      AND CTRY_CD = #{ctryCd}
+  </select>
+  
+  <update id='addTDUnsupportedCharacterReplacement' parameterType='com.uob.edag.model.TDUnsupportedCharacterReplacement'>
+    INSERT INTO EDAG_LOAD_TD_CHAR_REPLACE(PROC_ID, CTRY_CD, FLD_NM, REPLACEMENT_CHAR)
+    VALUES(#processID, #countryCode, #fieldName, #replacementChar)
+  </update>
+  
+  <update id='deleteTDUnsupportedCharacterReplacement' parameterType='com.uob.edag.model.TDUnsupportedCharacterReplacement'>
+    DELETE FROM EDAG_LOAD_TD_CHAR_REPLACE
+    WHERE PROC_ID = #{processID}
+      AND CTRY_CD = #{countryCode}
+      AND FLD_NM = #{fieldName}
+  </update>
+  
+  <select id='getFieldNamePatterns' parameterType='string' resultMap="fieldNamePatternsMap">
+	SELECT
+	FLD_NM,
+	LISTAGG(FIELD_NAME_PATTERN, '|')
+	WITHIN GROUP (ORDER BY FIELD_NAME_PATTERN) AS FIELDNAMEPATTERNS
+	FROM EDAG_FIELD_NAME_PATTERNS
+	WHERE PROC_ID = #{procId}
+	GROUP BY FLD_NM
+  </select>
+  
+ <resultMap type="java.util.HashMap" id="fieldNamePatternsMap">
+    <result property="key" column="FLD_NM" />
+    <result property="value" column="FIELDNAMEPATTERNS" />
+  </resultMap>
+  
+  <insert id='insertStageLogForAttachments' parameterType='com.uob.edag.model.StageModel'>
+      INSERT INTO EDAG_PROCESS_STAGE_LOG
+      (STAGE_ID, PROC_INSTANCE_ID, STAGE_START_DT, STAGE_END_DT, STAGE_ERROR_TXT, STAGE_STATUS_CD, REFERENCED_FILE_COUNT, REFERENCED_FILE_COPIED, REFERENCED_FILE_MISSING)
+      VALUES
+      (#{stageId}, #{procInstanceId}, #{startTime}, #{endTime}, #{error}, #{status}, #{referencedFileCount}, #{referencedFileCopied}, #{referencedFileMissing} )
+  </insert>
+  
+   <select id='getAdobeProcStatus' resultType="string">
+    SELECT COUNT(*) AS CNT FROM EDAG_PROCESS_LOG WHERE PROC_STATUS_CD = 'F' AND PROC_INSTANCE_ID IN 
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+  	</foreach>
+  </select>
+  <update id='updateFinalProcessLog'>
+      UPDATE EDAG_PROCESS_LOG
+      SET
+        PROC_STATUS_CD = #{status},
+        PROC_ERROR_TXT = #{errorTxt}
+      WHERE PROC_INSTANCE_ID IN
+      <foreach item="item" index="index" collection="procIdList" open="(" separator="," close=")">
+        #{item}
+  	  </foreach>
+  </update>
+
+    <select id='getOrderedFieldNames' resultType='string'>
+        SELECT FLD_NM as fieldName
+        FROM   EDAG_FIELD_DETAIL
+        WHERE  (FILE_ID IN (SELECT FILE_ID FROM   EDAG_FILE_DETAIL WHERE  PROC_ID = #{procId}) AND ( RCRD_TYP_CD = 'FI' OR RCRD_TYP_CD = 'PK' OR RCRD_TYP_CD = 'FK' OR RCRD_TYP_CD = 'BK' ) )
+        ORDER  BY FLD_NUM ASC
+    </select>
+	
+	
+  <select id='retrieveSolrCollection' resultType='com.uob.edag.model.SolrCollectionModel'>
+    SELECT
+      COUNTRY_CODE as countryCode, 
+      FILE_TYPE as fileType, 
+      DOCUMENT_TYPE_CODE as documentTypeCode, 
+      COLLECTION_NAME as collectionName,
+      REGULAR_EXP as regularExp,
+      REMARKS as remarks
+    FROM 
+      EDAG_SOLR_DOC_COLLECTION
+  </select>
+  
+  <select id='retrieveT11HiveQL' parameterType='string' resultType='com.uob.edag.model.AttMasterFileModel'>
+    SELECT
+      HIVE_QL as hiveQL, 
+      ENGINE_NAME as engineName
+    FROM 
+      EDAG_ATTMT_HIVE_QL_META
+    WHERE PROC_ID = #{procId}
+  </select>
+  
+  <select id='retrievePreProcessFlag' parameterType='map' resultType='string'>
+    SELECT
+      FLG as flag
+    FROM 
+      EDAG_PROC_PRE_PROCESS_FLAG
+    WHERE PROC_ID = #{procId}
+    AND CTRY_CD = #{countryCd}
+  </select>
+  
+  <select id='retrievePreProcessClassName' parameterType='map' resultType='string'>
+    SELECT
+      PARAM_VAL
+    FROM 
+      EDAG_PROC_PARAM
+    WHERE PROC_ID = #{procId}
+    AND PARAM_NM = 'PRE_PROCESS_CLASS_NAME'
+  </select>
+
+    <update id='updateProcessLogFileSizeTime' parameterType='com.uob.edag.model.ProcessInstanceModel'>
+        UPDATE EDAG_PROCESS_LOG
+        SET
+        SRC_FILE_SIZE_BYTES = #{srcFileSizeBytes},
+        SRC_FILE_ARRIVAL_TIME = TO_DATE(#{srcFileArrivalTime},'yyyy/mm/dd hh24:mi:ss')
+        WHERE PROC_INSTANCE_ID = #{procInstanceId}
+    </update>
+    
+   <select id='getPrevRunProcInstanceId' parameterType='com.uob.edag.model.ProcessInstanceModel' resultType='string'>
+      SELECT PROC_INSTANCE_ID as procInstanceId
+      FROM 
+      (SELECT 
+        PROC_INSTANCE_ID
+      FROM EDAG_PROCESS_LOG
+      WHERE BIZ_DT=TO_DATE(#{bizDate},'yyyy-MM-dd') 
+      AND PROC_ID=#{procId}
+      AND SRC_SYS_CD=#{sourceSystemId}
+      AND CTRY_CD=#{countryCd}
+      AND PROC_INSTANCE_ID != #{procInstanceId}
+      AND PROC_STATUS_CD='S'
+      <if  test="hourToRun != null">
+      	AND HOUR_RUN = '${hourToRun}'
+	  </if>
+	  <if  test="hourToRun == null">
+	    AND HOUR_RUN is null
+	  </if>
+      ORDER BY PROC_START_DT DESC)
+      WHERE ROWNUM &lt; 2
+   </select>
+   <select id='getProcInstanceModelForIndexing' parameterType='map' resultType='com.uob.edag.model.ProcessInstanceModel'>
+      SELECT PROC_INSTANCE_ID as procInstanceId, 
+        PROC_STATUS_CD as status, 
+        PROC_END_DT as endTime  
+      FROM 
+      (SELECT 
+        PROC_INSTANCE_ID,
+        PROC_STATUS_CD, 
+        PROC_END_DT
+      FROM EDAG_PROCESS_LOG
+      WHERE BIZ_DT=TO_DATE(#{bizDate},'yyyy-MM-dd')
+      AND PROC_ID=#{procId}
+      AND SRC_SYS_CD=#{sourceSystemId}
+      AND CTRY_CD=#{countryCd}
+      AND PROC_STATUS_CD='S'
+      <if  test="hourToRun != null">
+      	AND HOUR_RUN = '${hourToRun}'
+	  </if>
+	  <if  test="hourToRun == null">
+	    AND HOUR_RUN is null
+	  </if>
+      ORDER BY PROC_START_DT DESC)
+      WHERE ROWNUM &lt; 2
+   </select>
+   <select id="getSparkExecutionProperties" parameterType='map' resultType='com.uob.edag.model.SparkExecParamsModel'>
+   	SELECT
+   	  PROC_ID as procId,
+   	  CTRY_CD as ctryCd,
+      DRIVER_MEMORY as driverMemory,
+      EXECUTOR_MEMORY as executorMemory,
+      NO_OF_EXECUTORS as executorInstances,
+      EXECUTOR_CORES as executorCores
+    FROM 
+      EDAG_SPARK_EXECUTION_PARAMS
+    WHERE PROC_ID = #{procId}
+    AND CTRY_CD = #{ctryCd}
+    AND PARAM_NM = #{paramNm}
+   </select>
+</mapper>

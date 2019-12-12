@@ -1,0 +1,33 @@
+create or replace view $!{viewName} (#foreach ($field in $fields)
+
+                                        `$!{field.normalizedName}` comment '$!{field.normalizedDescription}'
+                                        #if ($foreach.hasNext)
+                                        ,
+                                        #end
+                                     #end
+                                     , proc_instance_id, proc_ts, site_id, biz_dt)
+as   select #foreach ($field in $fields)
+         #if ($field.null)
+           CAST ( NULL as STRING )
+         #end
+         `$!{field.normalizedName}`
+         #if ($foreach.hasNext)
+           ,
+         #end
+       #end
+       ,`proc_instance_id`,`proc_ts`,`site_id`,`biz_dt`
+from $!{tableName}   where  
+        #if ($siteIdConditionKey == "gd")
+          site_id != 'ID'
+        #elseif ($siteIdConditionKey == "so")
+          site_id NOT IN ('MY','TH','CN','ID')
+        #elseif ($siteIdConditionKey == "my")
+          site_id = 'MY'
+        #elseif ($siteIdConditionKey == "th")
+          site_id = 'TH'
+        #elseif ($siteIdConditionKey == "cn")
+          site_id = 'CN'
+        #elseif ($siteIdConditionKey == "id")
+          site_id = 'ID'
+        #end;
+

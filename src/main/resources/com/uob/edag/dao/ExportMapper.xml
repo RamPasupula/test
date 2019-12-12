@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uob.edag.mappers.ExportMapper">
+  
+ <select id='retrieveProcessMaster' parameterType='string' resultType='com.uob.edag.model.ProcessModel'>
+    SELECT
+      PROC_ID as procId, 
+      PROC_NM as procName, 
+      PROC_TYPE_CD as procTypeCd,
+      PROC_GRP_ID as procGroupID,
+      PROC_DESC as procDesc, 
+      PROC_FREQ_CD as procFreq, 
+      SRC_SYS_CD as srcSystemID,
+      DEPLOY_NODE_NM as deployNode,
+      PROC_CRITICALITY_CD as procPriority
+    FROM 
+      EDAG_PROCESS_MASTER
+      WHERE
+        PROC_ID = #{procId}
+        AND IS_ACT_FLG='Y'
+  </select>
+  
+  <select id='retrieveProcessCountry' parameterType='string' resultType="com.uob.edag.model.CountryAttributes">
+    SELECT
+      CTRY_CD as countryCode, charset, encoding
+    FROM 
+      EDAG_PROC_CTRY_DTL
+      WHERE
+        PROC_ID = #{procId}
+        AND IS_ACT_FLG='Y'
+  </select>
+
+  <select id='retrieveExportProcess' parameterType='string' resultType='com.uob.edag.model.DestModel'>
+    SELECT
+      'EXPORT' as type,
+      PROC_ID as processId, 
+      SRC_DB_NM as srcDbName,
+      SRC_TBL_NM as srcTblName,
+      TGT_DIR_NM as tgtDirName,
+      TGT_FILE_NM as tgtFileName,
+      TGT_FILE_EXTN_NM as tgtFileExtn,
+      TGT_FILE_COL_DELIM_TXT as tgtColDelim,
+      TGT_FILE_TXT_DELIM_TXT as tgtTxtDelim,
+      CTL_FILE_NM as ctrlFileName,
+      CTL_FILE_EXTN_NM as ctrlFileExtn
+    FROM 
+      EDAG_EXPORT_PROCESS
+      WHERE
+        PROC_ID = #{procId}
+  </select>
+  
+  <select id='retrieveProcessFileName' parameterType='string' resultType='string'>
+    SELECT
+      FILE_NM as processFileName
+    FROM 
+      EDAG_PROCESS_LOG
+      WHERE
+        PROC_INSTANCE_ID = #{procInstanceId}
+  </select>
+
+  <select id='retrieveLoadParams' parameterType='string' resultType='com.uob.edag.model.ProcessParam'>
+    SELECT
+      PARAM_NM as paramName,
+      PARAM_VAL as paramValue
+    FROM 
+      EDAG_PROC_PARAM
+    WHERE
+      PROC_ID = #{procId}
+  </select>
+  
+  <insert id='insertProcessLog' parameterType='com.uob.edag.model.ProcessInstanceModel'>
+      INSERT INTO EDAG_PROCESS_LOG
+      (PROC_INSTANCE_ID, BIZ_DT, PROC_ID, SRC_SYS_CD, CTRY_CD, PROC_START_DT, PROC_STATUS_CD)
+      VALUES
+      (#{procInstanceId}, TO_DATE(#{bizDate},'YYYY-MM-DD'), #{procId}, #{sourceSystemId}, #{countryCd}, #{startTime}, #{status})
+  </insert>
+  
+  <update id='updateProcessLogFileName' parameterType='com.uob.edag.model.ProcessInstanceModel'>
+      UPDATE EDAG_PROCESS_LOG
+      SET
+        FILE_NM = #{fileNm}
+      WHERE PROC_INSTANCE_ID = #{procInstanceId}
+  </update>
+  
+  <update id='updateProcessLog' parameterType='com.uob.edag.model.ProcessInstanceModel'>
+      UPDATE EDAG_PROCESS_LOG
+      SET
+        PROC_END_DT = #{endTime},
+        PROC_STATUS_CD = #{status},
+        PROC_ERROR_TXT = #{errorTxt}
+      WHERE PROC_INSTANCE_ID = #{procInstanceId}
+  </update>
+  
+  <insert id='insertStageLog' parameterType='com.uob.edag.model.StageModel'>
+      INSERT INTO EDAG_PROCESS_STAGE_LOG
+      (STAGE_ID, PROC_INSTANCE_ID, STAGE_START_DT, STAGE_STATUS_CD)
+      VALUES
+      (#{stageId}, #{procInstanceId}, #{startTime}, #{status})
+  </insert>
+  
+  <update id='updateStageLog' parameterType='com.uob.edag.model.StageModel'>
+      UPDATE EDAG_PROCESS_STAGE_LOG
+      SET
+        STAGE_END_DT = #{endTime},
+        STAGE_STATUS_CD = #{status},
+        STAGE_ERROR_TXT = #{error},
+        ROWS_INPUT = #{srcRowCount}, 
+        SRC_HASHSUM_AMT = #{srcHashsumAmt}, 
+        TGT_HASHSUM_AMT = #{destHashsumAmt}, 
+        ROWS_INSERTED = #{destRowCount},
+        TOOL_PROC_ID = #{toolProcId}
+      WHERE PROC_INSTANCE_ID = #{procInstanceId}
+      AND STAGE_ID = #{stageId}
+  </update>
+  
+  <select id='evaluateBizDtExpr' parameterType='string' resultType='string'>
+      SELECT TO_CHAR(${_parameter}, 'YYYY-MM-dd') FROM DUAL
+  </select>
+  
+  <select id='getPrevRunStatus' parameterType='com.uob.edag.model.ProcessInstanceModel' resultType='com.uob.edag.model.ProcessInstanceModel'>
+      SELECT PROC_INSTANCE_ID as procInstanceId, 
+        PROC_STATUS_CD as status, 
+        PROC_END_DT as endTime FROM 
+      (SELECT 
+        PROC_INSTANCE_ID, 
+        PROC_STATUS_CD, 
+        PROC_END_DT
+      FROM EDAG_PROCESS_LOG
+      WHERE BIZ_DT=TO_DATE(#{bizDate},'yyyy-MM-dd') 
+      AND PROC_ID=#{procId}
+      AND SRC_SYS_CD=#{sourceSystemId}
+      AND CTRY_CD=#{countryCd}
+      AND PROC_INSTANCE_ID != #{procInstanceId}
+      AND PROC_END_DT IS NOT NULL
+      ORDER BY PROC_END_DT DESC)
+      WHERE ROWNUM &lt; 2
+  </select>
+  
+  <select id='getStageInfo' parameterType='com.uob.edag.model.ProcessInstanceModel' resultType='com.uob.edag.model.StageModel'>
+      SELECT 
+        STAGE_ID as stageID,
+      PROC_INSTANCE_ID as procInstanceId,
+      STAGE_START_DT as startTime,
+      STAGE_END_DT as endTime,
+      STAGE_STATUS_CD as status,
+      STAGE_ERROR_TXT as error,
+      ROWS_INPUT as srcRowCount,
+      SRC_HASHSUM_AMT as srcHashsumAmt,
+      TGT_HASHSUM_AMT as destHashsumAmt,
+      ROWS_INSERTED as destRowCount
+      FROM EDAG_PROCESS_STAGE_LOG
+      WHERE PROC_INSTANCE_ID=#{procInstanceId}
+  </select>
+
+</mapper>

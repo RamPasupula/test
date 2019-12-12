@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><root xmlns="http://www.informatica.com/Parameterization/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema" version="2.0">
+  <project name="EDA_DL_DEV_T1_T1_1">
+            <mapping name="m_ing_FF_T1">
+                <parameter name="hdfs_dir">/d01/SG/LNS/LNTIER/biz_dt=2018-05-18/</parameter>
+                <parameter name="hdfs_file">LNTIER</parameter>
+                <parameter name="source_file">LNTIER.2018-05-18.20170711132212_1</parameter>
+                <parameter name="source_file_dir">/data/d01/cdtransfer/edasg/lnssg/processing</parameter>
+                <parameter name="Cnx_HDFS">HDFS_EDA_DEV</parameter>
+      </mapping>
+      <mapping name="m_load_T1_T1_1">
+                <parameter name="validation">IIF((0+ IIF(LENGTH(LTRIM(RTRIM(LTACNO)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTACNO))) or LTRIM(RTRIM(LTACNO))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTACNO))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSEQ)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSEQ))) or LTRIM(RTRIM(LTSEQ))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSEQ))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSEQP)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSEQP))) or LTRIM(RTRIM(LTSEQP))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSEQP))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTTLMT)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTTLMT))) or LTRIM(RTRIM(LTTLMT))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTTLMT))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTRATE)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRATE))) or LTRIM(RTRIM(LTRATE))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRATE))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTRT)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRT))) or LTRIM(RTRIM(LTRT))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRT))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTPVAR)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTPVAR))) or LTRIM(RTRIM(LTPVAR))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTPVAR))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTFLOR)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTFLOR))) or LTRIM(RTRIM(LTFLOR))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTFLOR))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTCEIL)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTCEIL))) or LTRIM(RTRIM(LTCEIL))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTCEIL))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTRDT6)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRDT6))) or LTRIM(RTRIM(LTRDT6))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRDT6))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTTERM)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTTERM))) or LTRIM(RTRIM(LTTERM))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTTERM))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTRDAY)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRDAY))) or LTRIM(RTRIM(LTRDAY))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRDAY))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSTR6)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSTR6))) or LTRIM(RTRIM(LTSTR6))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSTR6))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSTR7)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSTR7))) or LTRIM(RTRIM(LTSTR7))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSTR7))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTEXP6)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTEXP6))) or LTRIM(RTRIM(LTEXP6))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTEXP6))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTDLM6)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTDLM6))) or LTRIM(RTRIM(LTDLM6))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTDLM6))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTDLM7)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTDLM7))) or LTRIM(RTRIM(LTDLM7))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTDLM7))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTRTSQ)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRTSQ))) or LTRIM(RTRIM(LTRTSQ))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRTSQ))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTAMT1)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTAMT1))) or LTRIM(RTRIM(LTAMT1))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTAMT1))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTAMT2)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTAMT2))) or LTRIM(RTRIM(LTAMT2))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTAMT2))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTAMT3)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTAMT3))) or LTRIM(RTRIM(LTAMT3))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTAMT3))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTRAT1)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRAT1))) or LTRIM(RTRIM(LTRAT1))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRAT1))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTRAT2)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRAT2))) or LTRIM(RTRIM(LTRAT2))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRAT2))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTRAT3)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRAT3))) or LTRIM(RTRIM(LTRAT3))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRAT3))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTDT16)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTDT16))) or LTRIM(RTRIM(LTDT16))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTDT16))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTDT26)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTDT26))) or LTRIM(RTRIM(LTDT26))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTDT26))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTDT36)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTDT36))) or LTRIM(RTRIM(LTDT36))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTDT36))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSEQ1)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSEQ1))) or LTRIM(RTRIM(LTSEQ1))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSEQ1))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSEQ2)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSEQ2))) or LTRIM(RTRIM(LTSEQ2))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSEQ2))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSEQ3)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSEQ3))) or LTRIM(RTRIM(LTSEQ3))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSEQ3))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSEQ4)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSEQ4))) or LTRIM(RTRIM(LTSEQ4))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSEQ4))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSEQ5)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSEQ5))) or LTRIM(RTRIM(LTSEQ5))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSEQ5))),0,1)))+ IIF(LENGTH(LTRIM(RTRIM(LTSEQ6)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTSEQ6))) or LTRIM(RTRIM(LTSEQ6))='0',0,IIF(IS_NUMBER(LTRIM(RTRIM(LTSEQ6))),0,1)))+ IIF(LTRIM(RTRIM(LTRDT7))='0000000' or LTRIM(RTRIM(LTRDT7))='9999999' or LTRIM(RTRIM(LTRDT7))='0' ,0, IIF(LENGTH(LTRIM(RTRIM(LTRDT7)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTRDT7))),0,IIF(IS_NUMBER(LTRIM(RTRIM(LTRDT7))),0,1))))+ IIF(LTRIM(RTRIM(LTEXP7))='0000000' or LTRIM(RTRIM(LTEXP7))='9999999' or LTRIM(RTRIM(LTEXP7))='0' ,0, IIF(LENGTH(LTRIM(RTRIM(LTEXP7)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTEXP7))),0,IIF(IS_NUMBER(LTRIM(RTRIM(LTEXP7))),0,1))))+ IIF(LTRIM(RTRIM(LTDT17))='0000000' or LTRIM(RTRIM(LTDT17))='9999999' or LTRIM(RTRIM(LTDT17))='0' ,0, IIF(LENGTH(LTRIM(RTRIM(LTDT17)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTDT17))),0,IIF(IS_NUMBER(LTRIM(RTRIM(LTDT17))),0,1))))+ IIF(LTRIM(RTRIM(LTDT27))='0000000' or LTRIM(RTRIM(LTDT27))='9999999' or LTRIM(RTRIM(LTDT27))='0' ,0, IIF(LENGTH(LTRIM(RTRIM(LTDT27)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTDT27))),0,IIF(IS_NUMBER(LTRIM(RTRIM(LTDT27))),0,1))))+ IIF(LTRIM(RTRIM(LTDT37))='0000000' or LTRIM(RTRIM(LTDT37))='9999999' or LTRIM(RTRIM(LTDT37))='0' ,0, IIF(LENGTH(LTRIM(RTRIM(LTDT37)))=0,0,IIF(ISNULL(LTRIM(RTRIM(LTDT37))),0,IIF(IS_NUMBER(LTRIM(RTRIM(LTDT37))),0,1)))))=0, true, false)</parameter>
+                <parameter name="Cnx_Param">HADOOP_EDA_DEV_H</parameter>
+                <parameter name="DbSce">staging_d01_SG_LNS</parameter>
+                <parameter name="TblSce">eda_LNS_LNTIER_D</parameter>
+                <parameter name="DbTgt">d01_LNS</parameter>
+                <parameter name="TblTgt">EDA_LNS_LNTIER_D</parameter>
+                <parameter name="proc_instance_id">be6494db-3c38-4fbe-b7f4-f5c7acbc5718</parameter>
+                <parameter name="BizDt">2018-05-18</parameter>
+                <parameter name="site_id">SG</parameter>
+                <parameter name="TblErr">eda_LNS_LNTIER_D_err</parameter>
+                <parameter name="Cnx_HIVE">HIVE_EDA_DEV</parameter>
+                <parameter name="Rule_1">Dummy</parameter>
+                <parameter name="Rule_2">Dummy</parameter>
+                <parameter name="Rule_3">LTACNO,LTATYP,LTSEQ,LTSEQP,LTTLMT,LTRATE,LTRT,LTPVAR,LTPVR1,LTFLOR,LTCEIL,LTRDT6,LTRDT7,LTTERM,LTTRCD,LTRDAY,LTSTR6,LTSTR7,LTEXP6,LTEXP7,LTDLM6,LTDLM7,LTRTSQ,LTAMT1,LTAMT2,LTAMT3,LTRAT1,LTRAT2,LTRAT3,LTDT16,LTDT17,LTDT26,LTDT27,LTDT36,LTDT37,LTCHR1,LTCHR2,LTCHR3,LTCHR4,LTCHR5,LTCHR6,LTCHR7,LTCHR8,LTCHR9,LTSEQ1,LTSEQ2,LTSEQ3,LTSEQ4,LTSEQ5,LTSEQ6</parameter>
+                <parameter name="Rule_4">LTACNO,LTATYP,LTSEQ,LTSEQP,LTTLMT,LTRATE,LTRT,LTPVAR,LTPVR1,LTFLOR,LTCEIL,LTRDT6,LTRDT7,LTTERM,LTTRCD,LTRDAY,LTSTR6,LTSTR7,LTEXP6,LTEXP7,LTDLM6,LTDLM7,LTRTSQ,LTAMT1,LTAMT2,LTAMT3,LTRAT1,LTRAT2,LTRAT3,LTDT16,LTDT17,LTDT26,LTDT27,LTDT36,LTDT37,LTCHR1,LTCHR2,LTCHR3,LTCHR4,LTCHR5,LTCHR6,LTCHR7,LTCHR8,LTCHR9,LTSEQ1,LTSEQ2,LTSEQ3,LTSEQ4,LTSEQ5,LTSEQ6</parameter>
+                <parameter name="Rule_5">Dummy</parameter>
+                <parameter name="Rule_6">Dummy</parameter>
+                <parameter name="Rule_7">Dummy</parameter>
+                <parameter name="Rule_8">Dummy</parameter>
+                <parameter name="Rule_9">Dummy</parameter>
+                <parameter name="Rule_10">Dummy</parameter>
+                <parameter name="Rule_11">Dummy</parameter>
+                <parameter name="Rule_12">Dummy</parameter>
+                <parameter name="Rule_13">Dummy</parameter>
+                <parameter name="Rule_14">Dummy</parameter>
+                <parameter name="Rule_15">Dummy</parameter>
+                <parameter name="Rule_16">Dummy</parameter>
+                <parameter name="Rule_17">Dummy</parameter>
+                <parameter name="Rule_18">Dummy</parameter>
+                <parameter name="Rule_19">Dummy</parameter>
+                <parameter name="Rule_20">Dummy</parameter>
+                <parameter name="Rule_21">Dummy</parameter>
+                <parameter name="Rule_22">Dummy</parameter>
+                <parameter name="Rule_23">Dummy</parameter>
+                <parameter name="Rule_24">Dummy</parameter>
+                <parameter name="Rule_25">LTACNO,LTSEQ,LTSEQP,LTTLMT,LTRATE,LTRT,LTPVAR,LTFLOR,LTCEIL,LTRDT6,LTTERM,LTRDAY,LTSTR6,LTSTR7,LTEXP6,LTDLM6,LTDLM7,LTRTSQ,LTAMT1,LTAMT2,LTAMT3,LTRAT1,LTRAT2,LTRAT3,LTDT16,LTDT26,LTDT36,LTSEQ1,LTSEQ2,LTSEQ3,LTSEQ4,LTSEQ5,LTSEQ6</parameter>
+                <parameter name="Rule_26">Dummy</parameter>
+                <parameter name="Rule_27">Dummy</parameter>
+                <parameter name="Rule_28">Dummy</parameter>
+                <parameter name="Rule_29">Dummy</parameter>
+                <parameter name="Rule_30">LTRDT7,LTEXP7,LTDT17,LTDT27,LTDT37</parameter>
+                <parameter name="Rule_31">Dummy</parameter>
+                <parameter name="Rule_32">Dummy</parameter>
+                <parameter name="Rule_33">Dummy</parameter>
+                <parameter name="Rule_34">Dummy</parameter>
+                <parameter name="Rule_35">Dummy</parameter>
+                <parameter name="Rule_36">Dummy</parameter>
+                <parameter name="Rule_37">Dummy</parameter>
+                <parameter name="Rule_38">Dummy</parameter>
+                <parameter name="Rule_39">Dummy</parameter>
+                <parameter name="Rule_40">Dummy</parameter>
+                <parameter name="Rule_41">Dummy</parameter>
+                <parameter name="Rule_42">Dummy</parameter>
+                <parameter name="Rule_43">Dummy</parameter>
+                <parameter name="Rule_44">Dummy</parameter>
+                <parameter name="Rule_45">Dummy</parameter>
+                <parameter name="Rule_46">Dummy</parameter>
+                <parameter name="Rule_47">Dummy</parameter>
+                <parameter name="Rule_48">Dummy</parameter>
+                <parameter name="Rule_49">Dummy</parameter>
+                <parameter name="Rule_50">Dummy</parameter>
+                <parameter name="Rule_51">Dummy</parameter>
+            </mapping>
+    </project>
+</root>

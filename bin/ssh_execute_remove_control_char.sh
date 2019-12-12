@@ -1,0 +1,1 @@
+ssh -i $2 $3@$4 "bash -s" < ./remove_control_char.sh $@

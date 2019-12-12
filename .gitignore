@@ -1,0 +1,62 @@
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# Remove mac indexing files
+.DS_Store
+
+# IntelliJ files
+/.idea/
+edf.iml
+
+/target/
+/sql/
+/param/
+/tpt_tas/
+/data/cdtransfer/
+/data/test/
+/conf/*-cb.properties
+
+# Eclipse files
+.classpath
+.project
+.settings/
+
+SML_FIN_ST_DET*
+blah.properties
+conf/framework-conf-phil.properties
+data/batch2/EDW_TAS_DL*.xls*
+data/batch3/*EDW_GLN_Trial*.xls*
+data/batch3/UOB_EDAG_Process_Specification_GLN*.xlsx
+fixedwidthfilecheckermeta.txt
+fixedwidthfilecheckersample.txt
+List
+out.txt
+summary.txt
+velocity.log*
+*.crc
+
+/local/
+/local/*
+/output/
+/output/*
+/data//batch7/
+/data/batch7/*
